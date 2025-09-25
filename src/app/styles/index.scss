@@ -1,0 +1,13 @@
+@import "./globals.css";
+@import "./variables.scss";
+
+body {
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  font-family:
+    ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
+  background-color: var(--bg-page, #fff);
+  color: var(--text, #4a5565);
+}
