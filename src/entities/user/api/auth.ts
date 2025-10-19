@@ -1,18 +1,26 @@
 import { apiInstance } from "@/shared/api/instance";
-import { LoginParams, User } from "../model/types";
+
+import {
+  AuthLoginParams,
+  AuthLoginResponse,
+  AuthLogoutParams,
+  AuthLogoutResponse,
+  AuthMeParams,
+  AuthMeResponse,
+} from "../model/types";
 
 /** Класс аутентификации в системе */
-class AuthApi {
+export class AuthApi {
   private static instance: AuthApi;
-  private baseKey: string;
+  readonly baseKey: string;
 
   private constructor(private readonly prefixKey: string) {
-    this.baseKey = `${this.prefixKey}`;
+    this.baseKey = `${this.prefixKey}/auth`; // может поменяться путь
   }
 
-  public static getInstance(): AuthApi {
+  public static getInstance(prefixKey: string): AuthApi {
     if (!AuthApi.instance) {
-      AuthApi.instance = new AuthApi("auth"); // может поменяться
+      AuthApi.instance = new AuthApi(prefixKey);
     }
 
     return AuthApi.instance;
@@ -24,8 +32,8 @@ class AuthApi {
    * @param password пароль аккаунта для авторизации
    * @returns  token и Account
    */
-  login = async ({ login, password }: LoginParams) => {
-    const response = await apiInstance<User>({
+  login = ({ login, password, signal }: AuthLoginParams) => {
+    return apiInstance<AuthLoginResponse>({
       method: "POST",
       path: `${this.baseKey}/login`,
       // body: { login, password },
@@ -33,34 +41,29 @@ class AuthApi {
         username: login,
         password,
       },
+      signal,
     });
-
-    return response;
   };
 
   /**
    * Выход из аккаунта
    * @returns success
    */
-  logout = async () => {
-    const response = await apiInstance<{ success: boolean }>({
+  logout = ({ signal }: AuthLogoutParams) => {
+    return apiInstance<AuthLogoutResponse>({
       path: `${this.baseKey}/logout`,
+      signal,
     });
-
-    return response;
   };
 
   /**
    * Получение данных об аккаунте
    * @returns account
    */
-  me = () => {
-    const response = apiInstance<User>({
+  me = ({ signal }: AuthMeParams) => {
+    return apiInstance<AuthMeResponse>({
       path: `${this.baseKey}/me`,
+      signal,
     });
-
-    return response;
   };
 }
-
-export const authApi = AuthApi.getInstance();

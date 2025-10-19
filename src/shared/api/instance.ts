@@ -1,6 +1,14 @@
 import axios, { AxiosRequestConfig, Method } from "axios";
 import { getCookie } from "../utils/cookie";
 
+interface Params {
+  method?: Method;
+  path: string;
+  body?: object;
+  signal?: AbortSignal;
+  headers?: Record<string, string>;
+}
+
 interface ResponseError {
   status?: "error" | unknown;
   message?: string;
@@ -18,19 +26,16 @@ export const apiInstance = async <T>({
   method = "GET",
   path,
   body,
+  signal,
   headers,
-}: {
-  method?: Method;
-  path: string;
-  body?: object;
-  headers?: Record<string, string>;
-}): Promise<T> => {
+}: Params): Promise<T> => {
   const config: AxiosRequestConfig = {
     method,
     url: `${API_BASE_URL}/${path}`,
     data: body,
+    signal,
     headers: {
-      Authorization: `Bearer ${getCookie("accessToken") || ""}`,//
+      Authorization: `Bearer ${getCookie("accessToken") || ""}`, //
       "Content-Type": "application/json",
       ...headers,
     },

@@ -4,22 +4,24 @@ import {
   useContext,
   useEffect,
   useState,
-} from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+} from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
 
-import { appRouting } from "../config";
+import { appRouting } from '../config';
 
-import { authApi } from "@/entities/user/api/auth";
-import { User } from "@/entities/user/model/types";
+import { userApi } from '@/entities/user/api/user.api';
+import { AuthLoginParams, User } from '@/entities/user/model/types';
 
-import { getCookie, setCookie } from "@/shared/utils/cookie";
+import { getCookie, setCookie } from '@/shared/utils/cookie';
 
-import { Spinner } from "@heroui/react";
+import { Spinner } from '@heroui/react';
+
+type LoginOptions = AuthLoginParams;
 
 interface AuthContextType {
   user: User | null;
-  login: (loginData: { login: string; password: string }) => void;
+  login: (loginData: LoginOptions) => void;
   logout: () => void;
   isLoading: boolean;
   error: Error | null;
@@ -30,7 +32,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const useAuthContext = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuthContext must be used within an AuthProvider");
+    throw new Error('useAuthContext must be used within an AuthProvider');
   }
   return context;
 };
@@ -49,14 +51,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     isSuccess,
     isError,
   } = useQuery({
-    queryKey: ["user", "me", getCookie("accessToken")],
-    queryFn: authApi.me,
-    enabled: !!getCookie("accessToken"), //
+    queryKey: [
+      userApi.baseKey,
+      userApi.auth.baseKey,
+      'me',
+      getCookie('accessToken'),
+    ],
+    queryFn: userApi.auth.me,
+    // select:(response) => response.user
+    enabled: !!getCookie('accessToken'), //
     staleTime: 5 * 60 * 1000,
   });
 
   useEffect(() => {
-    if (!getCookie("accessToken") && !isUserLoading && !isInitialized) {
+    if (!getCookie('accessToken') && !isUserLoading && !isInitialized) {
       setUser(null);
       setIsInitialized(true);
     } else if (isSuccess && userData) {
@@ -72,34 +80,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [isSuccess, isError, userData]);
 
   const createAuthMutation = useMutation({
-    mutationFn: authApi.login,
-    mutationKey: ["user", "login"],
+    mutationKey: [userApi.baseKey, userApi.auth.baseKey, 'login'],
+    mutationFn: userApi.auth.login,
     onSuccess: (user) => {
       setUser(user);
-      setCookie("accessToken", user.accessToken);
+      setCookie('accessToken', user.accessToken);
       navigate(appRouting.main.path, { replace: true });
     },
     onError: (err) => {
-      console.error("Ошибка авторизации:", err);
+      console.error('Ошибка авторизации:', err);
     },
   });
 
-  const login = ({ login, password }: { login: string; password: string }) => {
-    createAuthMutation.mutate({ login, password });
+  const login = ({ login, password, signal }: LoginOptions) => {
+    createAuthMutation.mutate({ login, password, signal });
   };
 
   const logout = () => {
     setUser(null);
     setIsInitialized(false);
-    setCookie("accessToken", "", -1);
+    setCookie('accessToken', '', -1);
     queryClient.removeQueries({ queryKey: ['user'] });
     navigate(appRouting.auth.path, { replace: true });
   };
 
   if (!isInitialized) {
     return (
-      <div className="w-full h-[100vh] flex justify-center items-center">
-        <Spinner label="Загрузка ..." />
+      <div className='flex h-[100vh] w-full items-center justify-center'>
+        <Spinner label='Загрузка ...' />
       </div>
     );
   }
