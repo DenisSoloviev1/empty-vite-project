@@ -1,29 +1,61 @@
-import axios, { AxiosRequestConfig, Method } from "axios";
-import { getCookie } from "../utils/cookie";
-
-interface Params {
-  method?: Method;
-  path: string;
-  body?: object;
-  signal?: AbortSignal;
-  headers?: Record<string, string>;
-}
-
-interface ResponseError {
-  status?: "error" | unknown;
-  message?: string;
-  code?: number;
-}
+import axios, { AxiosRequestConfig, Method } from 'axios';
+import { getCookie } from '../utils/cookie';
 
 const API_BASE_URL = import.meta.env.VITE_PUBLIC_API_URL;
 
 /**
- * Универсальный HTTP-клиент для работы с API на Axios.
- * @throws {Error} — при сетевой ошибке, HTTP-ошибке или бизнес-ошибке от бэкенда.
- * @returns {Promise<T>} — данные успешного ответа.
+ * Parameters for API instance request
+ * @interface Params
+ * @template T - Expected response data type
+ */
+interface Params {
+  /** HTTP method (GET, POST, PUT, DELETE, etc.) */
+  method?: Method;
+  /** API endpoint path (will be appended to base URL) */
+  path: string;
+  /** Request body for POST, PUT, PATCH requests */
+  body?: object;
+  /** AbortSignal for request cancellation */
+  signal?: AbortSignal;
+  /** Additional HTTP headers */
+  headers?: Record<string, string>;
+}
+
+/**
+ * Standard error response structure from API
+ * @interface ResponseError
+ */
+interface ResponseError {
+  /** Error status from server */
+  status?: 'error' | unknown;
+  /** Human-readable error message */
+  message?: string;
+  /** Error code from server */
+  code?: number;
+}
+
+/**
+ * Universal HTTP client for API communication using Axios
+ * Handles authentication, error processing, and request configuration
+ *
+ * @template T - Expected response data type
+ * @param {Params} params - Request configuration parameters
+ * @param {Method} [params.method='GET'] - HTTP method
+ * @param {string} params.path - API endpoint path
+ * @param {object} [params.body] - Request payload
+ * @param {AbortSignal} [params.signal] - Abort signal for request cancellation
+ * @param {Record<string, string>} [params.headers] - Additional headers
+ *
+ * @returns {Promise<T>} Parsed response data from API
+ *
+ * @throws {Error} Will throw an error for:
+ * - Network errors
+ * - HTTP errors (4xx, 5xx status codes)
+ * - Business logic errors from backend
+ * - Unknown errors with descriptive messages
  */
 export const apiInstance = async <T>({
-  method = "GET",
+  method = 'GET',
   path,
   body,
   signal,
@@ -35,8 +67,8 @@ export const apiInstance = async <T>({
     data: body,
     signal,
     headers: {
-      Authorization: `Bearer ${getCookie("accessToken") || ""}`, //
-      "Content-Type": "application/json",
+      Authorization: `Bearer ${getCookie('accessToken') || ''}`,
+      'Content-Type': 'application/json',
       ...headers,
     },
   };
@@ -45,31 +77,32 @@ export const apiInstance = async <T>({
     const response = await axios(config);
     return response.data;
   } catch (error) {
+    // Handle Axios-specific errors
     if (axios.isAxiosError(error)) {
       const serverError = error.response?.data as ResponseError | undefined;
 
-      // Если сервер вернул ошибку с полем message, используем его
+      // Server returned error with message field
       if (serverError?.message) {
         throw new Error(serverError.message);
       }
 
-      // Если есть код ошибки, добавляем его в сообщение
+      // Server returned error with code
       if (serverError?.code) {
         throw new Error(`Ошибка ${serverError.code}: ${error.message}`);
       }
 
-      // Общее сообщение об ошибке, если нет специфичных данных
+      // Generic error message if no specific data available
       throw new Error(
         error.response?.statusText ||
           error.message ||
-          "Произошла ошибка при запросе к серверу",
+          'Произошла ошибка при запросе к серверу'
       );
     }
 
-    // Для не-Axios ошибок (например, проблемы с сетью)
+    // Handle non-Axios errors (network issues, etc.)
     throw new Error(
-      "Неизвестная ошибка: " +
-        (error instanceof Error ? error.message : String(error)),
+      'Неизвестная ошибка: ' +
+        (error instanceof Error ? error.message : String(error))
     );
   }
 };
