@@ -3,7 +3,7 @@ import { User } from "../user.interface";
 export type AuthLoginParams = {
   login: string;
   password: string;
-  signal: AbortSignal
+  signal?: AbortSignal
 };
 
 // export type AuthLoginResponse = {

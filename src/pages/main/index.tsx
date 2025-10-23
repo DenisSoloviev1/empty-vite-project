@@ -2,11 +2,15 @@ import { FC } from "react";
 import { Button } from "@heroui/react";
 import { useAuthContext } from "@/app/providers/auth";
 
+import { useNotification } from "@/entities/notification/hooks";
+
 import { LogoutIcon } from "@/shared/ui/icons";
+
 import cls from "./index.module.scss";
 
 const MainPage: FC = () => {
   const { user, logout } = useAuthContext();
+  const { notifications } = useNotification();
 
   return (
     <>
@@ -32,6 +36,12 @@ const MainPage: FC = () => {
       <main className={cls.main}>
         <div className={cls.wrapper}>
           {user && <p>Привет, {user.username}!</p>}
+
+          {notifications.map(({ message }, idx) => (
+            <>
+              <p key={idx}>{message}</p>
+            </>
+          ))}
         </div>
       </main>
     </>

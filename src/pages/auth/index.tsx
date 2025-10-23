@@ -5,13 +5,14 @@ import { FC, useState } from "react";
 
 import cls from "./index.module.scss";
 
-const defaultFormData = {
+const DEFAULT_FORM_DATA = {
   login: "",
   password: "",
 };
+
 const AuthPage: FC = () => {
   const { login, isLoading, error } = useAuthContext();
-  const [formData, setFormData] = useState(defaultFormData);
+  const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
   return (
     <main className={cls.authPage}>

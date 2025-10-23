@@ -1,4 +1,4 @@
-import { AuthApi } from "./auth";
+import { AuthApi } from './auth';
 
 /**
  * Main User API service class that aggregates various user-related API modules
@@ -7,7 +7,7 @@ import { AuthApi } from "./auth";
  */
 class UserApi {
   private static instance: UserApi;
-  readonly baseKey = "user";
+  readonly baseKey = 'user';
 
   /**
    * Gets the singleton instance of UserApi

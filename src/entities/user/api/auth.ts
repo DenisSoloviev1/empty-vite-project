@@ -1,4 +1,4 @@
-import { apiInstance } from "@/shared/api/instance";
+import { apiInstance } from '@/shared/api/instance';
 
 import {
   AuthLoginParams,
@@ -7,7 +7,7 @@ import {
   AuthLogoutResponse,
   AuthMeParams,
   AuthMeResponse,
-} from "../model/types";
+} from '../model/types';
 
 /**
  * Authentication API service class for handling user authentication operations
@@ -50,7 +50,7 @@ export class AuthApi {
    */
   login = ({ login, password, signal }: AuthLoginParams) => {
     return apiInstance<AuthLoginResponse>({
-      method: "POST",
+      method: 'POST',
       path: `${this.baseKey}/login`,
       // body: { login, password }, // Alternative format if needed
       body: {

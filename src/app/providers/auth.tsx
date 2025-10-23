@@ -22,7 +22,7 @@ type LoginOptions = AuthLoginParams;
 interface AuthContextType {
   user: User | null;
   login: (loginData: LoginOptions) => void;
-  logout: () => void;
+  logout: VoidFunction;
   isLoading: boolean;
   error: Error | null;
 }
