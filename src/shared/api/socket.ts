@@ -1,7 +1,7 @@
 import { io, Socket } from 'socket.io-client';
 // import { getCookie } from '../utils/cookie';
 
-const API_BASE_SOCKET_URL = import.meta.env.VITE_PUBLIC_API_SOCKET_URL;
+const API_BASE_URL = import.meta.env.VITE_PUBLIC_API_URL;
 
 /**
  * Singleton class for managing WebSocket connections using Socket.IO
@@ -37,7 +37,7 @@ class SocketInstance {
    */
   connect() {
     if (!this.socket) {
-      this.socket = io(`${API_BASE_SOCKET_URL}/realtime`, {
+      this.socket = io(`${API_BASE_URL}/realtime`, {
         // auth: { token: getCookie('token') },
         autoConnect: false,
         reconnection: true,

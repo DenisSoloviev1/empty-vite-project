@@ -1,7 +1,9 @@
-import React, { ReactNode } from "react";
-import { Navigate } from "react-router";
-import { appRouting } from "@/app/config";
-import { useAuthContext } from "../providers/auth";
+import React, { ReactNode } from 'react';
+import { Navigate } from 'react-router';
+
+import { appRouting } from '../config';
+
+import { useAuthContext } from '@entities/auth/lib';
 
 interface ProtectedRouteProps {
   children: ReactNode;

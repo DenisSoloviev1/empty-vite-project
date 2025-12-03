@@ -1,6 +1,6 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode } from 'react';
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 interface QueryProviderProps {
   children: ReactNode;

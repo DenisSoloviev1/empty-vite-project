@@ -1,16 +1,17 @@
-import { FC } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@heroui/react";
-import { appRouting } from "@/app/config";
+import { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@heroui/react';
 
-import cls from "./index.module.scss";
+import { appRouting } from '@app/config';
+
+import { MainLayout } from '@shared/ui/main-layout';
 
 const NotFoundPage: FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className={cls.notFound}>
-      <div className={cls.wrapper}>
+    <MainLayout>
+      <div className="w-full max-w-[600px] flex flex-col items-center m-auto">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
           404 - Страница не найдена
         </h1>
@@ -26,7 +27,7 @@ const NotFoundPage: FC = () => {
           На главную
         </Button>
       </div>
-    </div>
+    </MainLayout>
   );
 };
 

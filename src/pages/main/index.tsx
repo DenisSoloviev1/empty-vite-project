@@ -1,49 +1,19 @@
-import { FC } from "react";
-import { Button } from "@heroui/react";
-import { useAuthContext } from "@/app/providers/auth";
+import { FC } from 'react';
 
-import { useNotification } from "@/entities/notification/hooks";
-
-import { LogoutIcon } from "@/shared/ui/icons";
-
-import cls from "./index.module.scss";
+import { Header } from '@widgets/header';
+import { useAuthContext } from '@/entities/auth/lib';
+import { MainLayout } from '@/shared/ui/main-layout';
 
 const MainPage: FC = () => {
-  const { user, logout } = useAuthContext();
-  const { notifications } = useNotification();
+  const { user } = useAuthContext();
 
   return (
     <>
-      <header className={cls.header}>
-        <div className={cls.wrapper}>
-          <div className="flex justify-between items-center">
-            <h1>HubServer</h1>
+      <Header />
 
-            <div className="max-w-[250px] flex items-center gap-4">
-              <span>Пользователь: {user?.username}</span>
-              <Button
-                isIconOnly
-                variant="light"
-                className={cls.logout}
-                startContent={<LogoutIcon size={16} />}
-                onPress={() => logout()}
-              />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className={cls.main}>
-        <div className={cls.wrapper}>
-          {user && <p>Привет, {user.username}!</p>}
-
-          {notifications.map(({ message }, idx) => (
-            <>
-              <p key={idx}>{message}</p>
-            </>
-          ))}
-        </div>
-      </main>
+      <MainLayout classNames={'mt-16'}>
+        {user && <p>Привет, {user.username}!</p>}
+      </MainLayout>
     </>
   );
 };

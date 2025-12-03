@@ -1,83 +1,83 @@
-import { useAuthContext } from "@/app/providers/auth";
-import { LockIcon } from "@/shared/ui/icons";
-import { Button, Form, Input } from "@heroui/react";
-import { FC, useState } from "react";
+import { FC } from 'react';
+import { Button, Form, Input } from '@heroui/react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import cls from "./index.module.scss";
-
-const DEFAULT_FORM_DATA = {
-  login: "",
-  password: "",
-};
+import { useAuthContext } from '@entities/auth/lib';
+import { LockIcon } from '@shared/ui/icons';
+import { MainLayout } from '@shared/ui/main-layout';
+import { loginSchema, LoginFormData } from '@shared/lib';
 
 const AuthPage: FC = () => {
-  const { login, isLoading, error } = useAuthContext();
-  const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
+  const { handleLogin, isLoading } = useAuthContext();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = (data: LoginFormData) => {
+    handleLogin({ login: data.login, password: data.password });
+  };
 
   return (
-    <main className={cls.authPage}>
-      <Form className={cls.form}>
-        <div className={cls.header}>
-          <div className={cls.icon}>
-            <LockIcon />
+    <MainLayout>
+      <Form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full max-w-[445px] flex flex-col gap-6 p-6 border border-gray-100 rounded-xl shadow-xl m-auto"
+      >
+        <div className="w-full flex flex-col items-center gap-1">
+          <div className="w-12 h-12 flex justify-center items-center bg-blue-600 rounded-full mb-4">
+            <LockIcon className="text-white" />
           </div>
-          <h2>HubServer</h2>
-          <h1>Авторизация в системе управления терминалами</h1>
+          <h2 className="text-neutral-700 mb-1">HubServer</h2>
+          <h1 className="text-neutral-700 text-center">
+            Авторизация в системе управления терминалами
+          </h1>
         </div>
 
-        <div className={cls.content}>
+        <div className="w-full flex flex-col gap-4">
           <Input
+            {...register('login')}
             isClearable
-            size="sm"
+            radius="sm"
             label="Логин"
             variant="bordered"
-            labelPlacement="outside-top"
+            labelPlacement="outside"
             placeholder="Введите логин"
-            value={formData.login}
-            onValueChange={(value) =>
-              setFormData({ ...formData, login: value })
-            }
+            isInvalid={!!errors.login}
+            errorMessage={errors.login?.message}
           />
 
           <Input
+            {...register('password')}
             isClearable
-            size="sm"
+            radius="sm"
             label="Пароль"
             variant="bordered"
-            labelPlacement="outside-top"
+            labelPlacement="outside"
             placeholder="Введите пароль"
-            value={formData.password}
-            onValueChange={(value) =>
-              setFormData({ ...formData, password: value })
-            }
+            type="password"
+            isInvalid={!!errors.password}
+            errorMessage={errors.password?.message}
           />
 
           <Button
             color="primary"
             radius="sm"
-            isDisabled={isLoading || !formData.login || !formData.password}
-            isLoading={isLoading}
+            type="submit"
+            isDisabled={isLoading || isSubmitting}
+            isLoading={isLoading || isSubmitting}
             spinnerPlacement="end"
-            onPress={() =>
-              login({ login: formData.login, password: formData.password })
-            }
           >
             Войти
           </Button>
-
-          {error && (
-            <span className="text-red-500 text-sm text-center">
-              Ошибка: {error.message}
-            </span>
-          )}
-
-          <div className="flex flex-col items-center text-sm">
-            <p>Тестовые данные:</p>
-            <p>Логин: emilys, Пароль: emilyspass</p>
-          </div>
         </div>
       </Form>
-    </main>
+    </MainLayout>
   );
 };
 

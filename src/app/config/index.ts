@@ -8,7 +8,7 @@ class PagePath {
   }
 
   get normalizedPath(): string {
-    return this.method("").replace(/\/$/, "");
+    return this.method('').replace(/\/$/, '');
   }
 }
 
@@ -17,9 +17,9 @@ class AppRouting extends PagePath {
     super(prefix);
   }
 
-  main = new PagePath(this.method(""));
-  auth = new PagePath(this.method("auth"));
-  notFound = new PagePath(this.method("*"));
+  main = new PagePath(this.method(''));
+  auth = new PagePath(this.method('auth'));
+  notFound = new PagePath(this.method('*'));
 }
 
-export const appRouting = new AppRouting("");
+export const appRouting = new AppRouting('');

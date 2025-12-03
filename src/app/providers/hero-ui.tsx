@@ -1,7 +1,7 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode } from 'react';
 
-import { HeroUIProvider as Provider } from "@heroui/react";
-import { useHref, useNavigate } from "react-router-dom";
+import { HeroUIProvider as Provider } from '@heroui/react';
+import { useHref, useNavigate } from 'react-router-dom';
 
 interface HeroUIProviderProps {
   children: ReactNode;

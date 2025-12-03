@@ -1,2 +1,2 @@
-export { getCookie } from "./getCookie";
-export { setCookie } from "./setCookie";
+export { getCookie } from './getCookie';
+export { setCookie } from './setCookie';

@@ -12,7 +12,7 @@ export const setCookie = (
   const d = new Date();
 
   d.setTime(d.getTime() + expiresDays * 24 * 60 * 60 * 1000);
-  const expires = "expires=" + d.toUTCString();
+  const expires = 'expires=' + d.toUTCString();
 
-  document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
+  document.cookie = cookieName + '=' + cookieValue + ';' + expires + ';path=/';
 };

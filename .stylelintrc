@@ -1,0 +1,59 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-css-modules",
+    "stylelint-prettier/recommended",
+    "stylelint-config-recess-order"
+  ],
+  "plugins": ["stylelint-order", "stylelint-prettier"],
+  "rules": {
+    "import-notation": null,
+    "prettier/prettier": true,
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "extends",
+          "tailwind",
+          "apply",
+          "screen",
+          "theme",
+          "custom-variant"
+        ]
+      }
+    ],
+    "selector-class-pattern": [
+      "^[a-z][a-zA-Z0-9-_]+$",
+      {
+        "message": "Expected class selector to be kebab-case or camelCase"
+      }
+    ],
+    "keyframes-name-pattern": [
+      "^[a-z][a-zA-Z0-9-_]+$",
+      {
+        "message": "Expected keyframe name to be kebab-case or camelCase"
+      }
+    ],
+    "property-no-unknown": [
+      true,
+      {
+        "ignoreProperties": ["composes"]
+      }
+    ],
+    "rule-empty-line-before": [
+      "always",
+      {
+        "except": ["first-nested"],
+        "ignore": ["after-comment"]
+      }
+    ],
+    "color-hex-length": "long",
+    "block-no-empty": true,
+    "color-no-invalid-hex": true,
+    "comment-no-empty": true,
+    "font-family-no-duplicate-names": true,
+    "function-calc-no-unspaced-operator": true,
+    "no-descending-specificity": null,
+    "comment-whitespace-inside": "always"
+  }
+}

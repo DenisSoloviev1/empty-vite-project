@@ -1,8 +1,8 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode } from 'react';
 
-import { HeroUIProvider } from "@heroui/react";
-import { QueryProvider } from "./query";
-import { AuthProvider } from "./auth";
+import { HeroUIProvider } from '@heroui/react';
+import { QueryProvider } from './query';
+import { AuthProvider } from './auth';
 
 interface ProvidersProps {
   children: ReactNode;
